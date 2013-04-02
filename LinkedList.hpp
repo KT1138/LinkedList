@@ -4,8 +4,9 @@
 
 class LinkedList {
 private:
-  char* ptr;   // 先頭要素へのポインタ
-  int reserve_size;   // 現在使用中の領域サイズ
+  //public:
+  char** ptr;   // 先頭要素へのポインタ
+  int reserve_size;   // 要素数
   
 public:
   LinkedList();
@@ -15,11 +16,13 @@ public:
 public:
 
   // 指定された位置に指定された要素を追加
-  void add(int index, char ch);
+  void add(int index, char* ch);
   
 
   // リストの最後に指定された要素を追加
-  bool add(char ch);
+  // bool add(char ch);
+  bool add(char* ptr);
+  bool add(LinkedList* ptr);
 
 
   // 指定された LinkedList オブジェクト内のすべての要素を、リストの指定された位置に挿入する。値渡し
@@ -27,11 +30,11 @@ public:
 
 
   // リストの先頭に、指定された要素を挿入。値渡し
-  void addFirst(char ch);
+  // void addFirst(char ch);
 
 
   // リストの最後に、指定された要素を追加。値渡し
-  void addLast(char ch);
+  // void addLast(char ch);
 
 
   // リストからすべての要素を削除
@@ -48,7 +51,9 @@ public:
 
 
   // リスト内の指定された位置にある要素を返す。値渡し
-  char get(int index);
+  // char get(int index);
+  void* get(int index);
+  //char* get(int index);
 
 
   // リストの最初の要素を返す。値返し
