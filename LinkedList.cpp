@@ -7,7 +7,7 @@
 
 LinkedList::LinkedList() : reserve_size(0)
 {
-    ptr = reinterpret_cast<void**>(calloc(0, PTR_SIZE)); 
+    ptr = static_cast<void**>(calloc(0, PTR_SIZE)); 
 }
 
 
@@ -21,7 +21,7 @@ void LinkedList::add(int index, void* arg_ptr)
 {
   checkIndex(index);
   
-  void** new_ptr = reinterpret_cast<void**>(calloc(reserve_size + 1, PTR_SIZE));
+  void** new_ptr = static_cast<void**>(calloc(reserve_size + 1, PTR_SIZE));
 
   for ( int i = 0; i < index; ++i )
     {
@@ -57,7 +57,7 @@ bool LinkedList::addAll(int index, LinkedList* ll)
 {
   checkIndex(index);
   
-  void** new_ptr = reinterpret_cast<void**>(calloc(reserve_size + ll->reserve_size, PTR_SIZE));
+  void** new_ptr = static_cast<void**>(calloc(reserve_size + ll->reserve_size, PTR_SIZE));
 
 
   for ( int i = 0; i < index; ++i )
@@ -91,7 +91,7 @@ void LinkedList::addFirst(void* arg_ptr)
     }
   else 
     {
-      void** new_ptr = reinterpret_cast<void**>(calloc(reserve_size + 1, PTR_SIZE));
+      void** new_ptr = static_cast<void**>(calloc(reserve_size + 1, PTR_SIZE));
 
       new_ptr[0] = arg_ptr;
 
@@ -117,7 +117,7 @@ void LinkedList::addLast(void* arg_ptr)
     }
   else
     {
-       void** new_ptr = reinterpret_cast<void**>(calloc(reserve_size + 1, PTR_SIZE));
+       void** new_ptr = static_cast<void**>(calloc(reserve_size + 1, PTR_SIZE));
 
       for ( int i = 0; i < reserve_size; ++i )
 	{
@@ -131,7 +131,6 @@ void LinkedList::addLast(void* arg_ptr)
       ptr = new_ptr;
 
       ++reserve_size;     
-
     }
 }
 
@@ -164,7 +163,7 @@ bool LinkedList::contains(char ch)
 	}
       else
 	{
-	  if ( *reinterpret_cast<char*>(ptr[i]) == ch )
+	  if ( *static_cast<char*>(ptr[i]) == ch )
 	    {
 	      return true;
 	    }
@@ -190,7 +189,7 @@ bool LinkedList::contains(LinkedList* ll)
 	}
       else
 	{
-	  if ( reinterpret_cast<LinkedList*>(ptr[i])->isSame(ll) )
+	  if ( static_cast<LinkedList*>(ptr[i])->isSame(ll) )
 	    {
 	      return true;
 	    }
@@ -206,19 +205,19 @@ void* LinkedList::get(int index)
 {
   checkIndex(index);
   
-  return reinterpret_cast<void*>(ptr[index]);
+  return static_cast<void*>(ptr[index]);
 }
 
 
 void* LinkedList::getFirst()
 {
-  return reinterpret_cast<void*>(ptr[0]);
+  return static_cast<void*>(ptr[0]);
 }
 
 
 void* LinkedList::getLast()
 {
-  return reinterpret_cast<void*>(ptr[reserve_size - 1]);
+  return static_cast<void*>(ptr[reserve_size - 1]);
 }
 
 
@@ -230,7 +229,7 @@ int LinkedList::indexOf(char ch)
 
   while ( i < reserve_size )
     {
-      if ( ch == *reinterpret_cast<char*>(ptr[i]) )
+      if ( ch == *static_cast<char*>(ptr[i]) )
 	{
 	  ret_val = i;
 	  break;
@@ -254,7 +253,7 @@ int LinkedList::indexOf(LinkedList* ll)
 
       if ( addr > ADDRESS )
 	{
-	  if ( reinterpret_cast<LinkedList*>(ptr[i])->isSame(ll) )
+	  if ( static_cast<LinkedList*>(ptr[i])->isSame(ll) )
 	    {
 	      ret_val = i;
 	      break;
@@ -275,7 +274,7 @@ int LinkedList::lastIndexOf(char ch)
 
   while( i >= 0 )
     {
-      if ( ch == *reinterpret_cast<char*>(ptr[i]) )
+      if ( ch == *static_cast<char*>(ptr[i]) )
 	{
 	  ret_val = i;
 	  break;
@@ -299,7 +298,7 @@ int LinkedList::lastIndexOf(LinkedList* ll)
 
       if ( addr > ADDRESS )
 	{
-	  if ( reinterpret_cast<LinkedList*>(ptr[i])->isSame(ll) )
+	  if ( static_cast<LinkedList*>(ptr[i])->isSame(ll) )
 	    {
 	      ret_val = i;
 	      break;
@@ -316,7 +315,7 @@ void* LinkedList::remove(int index)
 {
   checkIndex(index);
   
-  void** new_ptr = reinterpret_cast<void**>(calloc(reserve_size - 1, PTR_SIZE));
+  void** new_ptr = static_cast<void**>(calloc(reserve_size - 1, PTR_SIZE));
 
   for ( int i = 0; i < index; ++i )
     {
@@ -348,7 +347,7 @@ bool LinkedList::remove(char ch)
 
   while ( index < reserve_size )
     {
-      if ( ch == *reinterpret_cast<char*>(ptr[index]) )
+      if ( ch == *static_cast<char*>(ptr[index]) )
 	{
 	  ret_val = true;
 	  break;
@@ -358,7 +357,7 @@ bool LinkedList::remove(char ch)
 
   if ( ret_val ) 
     {
-      void** new_ptr = reinterpret_cast<void**>(calloc(reserve_size - 1, PTR_SIZE));
+      void** new_ptr = static_cast<void**>(calloc(reserve_size - 1, PTR_SIZE));
 
       for ( int i = 0; i < index; ++i )
 	{
@@ -395,10 +394,10 @@ bool LinkedList::remove(LinkedList* ll)
 
       if ( addr > ADDRESS )
 	{
-	  if ( reinterpret_cast<LinkedList*>(ptr[index])->isSame(ll) )
+	  if ( static_cast<LinkedList*>(ptr[index])->isSame(ll) )
 	    {
 	      void** new_ptr =
-		reinterpret_cast<void**>(calloc(reserve_size - 1, sizeof(LinkedList*)));
+		static_cast<void**>(calloc(reserve_size - 1, sizeof(LinkedList*)));
 
 	      for ( int i = 0; i < index; ++i )
 		{
@@ -489,7 +488,7 @@ int LinkedList::size()
 void** LinkedList::toArray()
 {
   
-  void** ret_val = reinterpret_cast<void**>(calloc(reserve_size, PTR_SIZE));
+  void** ret_val = static_cast<void**>(calloc(reserve_size, PTR_SIZE));
 
   for ( int i = 0; i < reserve_size; ++i )
     {
@@ -526,15 +525,15 @@ bool LinkedList::isSame(LinkedList* ll)
 	    }
 	  else if ( addr_0 < ADDRESS && addr_1 < ADDRESS )
 	    {
-	      if ( *reinterpret_cast<char*>(ptr[i]) != *reinterpret_cast<char*>(ll->ptr[i]) )
+	      if ( *static_cast<char*>(ptr[i]) != *reinterpret_cast<char*>(ll->ptr[i]) )
 		{
 		  return false;
 		}
 	    }
 	  else if ( addr_0 > ADDRESS && addr_1 > ADDRESS )
 	    {
-	      LinkedList* ll_inner = reinterpret_cast<LinkedList*>(ptr[i]);
-	      LinkedList* ll_inner_arg = reinterpret_cast<LinkedList*>(ll->ptr[i]);
+	      LinkedList* ll_inner = static_cast<LinkedList*>(ptr[i]);
+	      LinkedList* ll_inner_arg = static_cast<LinkedList*>(ll->ptr[i]);
 
 	      if ( ll_inner->reserve_size != ll_inner_arg->reserve_size )
 		{
@@ -574,7 +573,7 @@ int main()
   // /***
   //  * まずはリストを用意する
   //  */
-  // //  深さ0(ルート)
+  // // 深さ0(ルート)
   // LinkedList* ll_root = new LinkedList();
 
 
@@ -593,11 +592,11 @@ int main()
   
  
 
-  // // /***
-  // //  * 深いところにあるリストから値を詰め込んでいく
-  // //  */
+  //  /***
+  //    * 深いところにあるリストから値を詰め込んでいく
+  //    */
 
-  // // //   深さ2
+  //  //   深さ2
   //  char tmp_ll = '1';
   //  ll_ll_dep2->add(&tmp_ll);
   
@@ -611,7 +610,7 @@ int main()
   //  ll_rr_dep2->add(&tmp_rr);
 
 
-  // // //   深さ1
+  //  //   深さ1
   //  char tmp_l = '2';
   //  ll_l_dep1->add(&tmp_l);
   //  ll_l_dep1->add(ll_ll_dep2);
@@ -623,7 +622,7 @@ int main()
   //  ll_r_dep1->add(ll_rr_dep2);
 
 
-  //  // //   深さ0
+  //  //   深さ0
   //  char tmp_root = '3';
   //  ll_root->add(&tmp_root);
   //  ll_root->add(ll_l_dep1);
@@ -635,19 +634,15 @@ int main()
   //   */
   //  func(ll_root);
 
-
-
-
-
 }
 
 
 void func(LinkedList* ll) {
   if ( ll->size() > 1)
     {
-      func( (LinkedList*)(ll->get(1)) );
-      func( (LinkedList*)(ll->get(2)) );
+      func( static_cast<LinkedList*>(ll->get(1)) );
+      func( static_cast<LinkedList*>(ll->get(2)) );
     }
 
-  printf("%c\n", *(char*)(ll->get(0)));
+  printf("%c\n", *static_cast<char*>(ll->get(0)));
 }
