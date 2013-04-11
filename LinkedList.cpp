@@ -159,15 +159,15 @@ bool LinkedList::contains(char ch)
 
       if ( addr > ADDRESS)
 	{
+	  ++i;
 	  continue;
 	}
-      else
+      else if ( ch == *static_cast<char*>(ptr[i]) )
 	{
-	  if ( *static_cast<char*>(ptr[i]) == ch )
-	    {
-	      return true;
-	    }
+	  return true;
 	}
+
+      ++i;
     }
 
   return false;
@@ -187,13 +187,11 @@ bool LinkedList::contains(LinkedList* ll)
 	  ++i;
 	  continue;
 	}
-      else
+      else if ( static_cast<LinkedList*>(ptr[i])->isSame(ll) )
 	{
-	  if ( static_cast<LinkedList*>(ptr[i])->isSame(ll) )
-	    {
-	      return true;
-	    }
+	  return true;
 	}
+
       ++i;
     }
 
@@ -234,6 +232,7 @@ int LinkedList::indexOf(char ch)
 	  ret_val = i;
 	  break;
 	}
+
       ++i;
     }
 
@@ -251,14 +250,17 @@ int LinkedList::indexOf(LinkedList* ll)
     {
       int addr = reinterpret_cast<int>(ptr[i]);
 
-      if ( addr > ADDRESS )
+      if ( addr < ADDRESS )
 	{
-	  if ( static_cast<LinkedList*>(ptr[i])->isSame(ll) )
-	    {
-	      ret_val = i;
-	      break;
-	    }
+	  ++i;
+	  continue;
 	}
+      else if ( static_cast<LinkedList*>(ptr[i])->isSame(ll) )
+	{
+	  ret_val = i;
+	  break;
+	}
+
       ++i;
     }
 
@@ -279,6 +281,7 @@ int LinkedList::lastIndexOf(char ch)
 	  ret_val = i;
 	  break;
 	}
+
       --i;
     }
 
@@ -296,14 +299,17 @@ int LinkedList::lastIndexOf(LinkedList* ll)
     {
       int addr = reinterpret_cast<int>(ptr[i]);
 
-      if ( addr > ADDRESS )
+      if ( addr < ADDRESS )
 	{
-	  if ( static_cast<LinkedList*>(ptr[i])->isSame(ll) )
-	    {
-	      ret_val = i;
-	      break;
-	    }
+	  ++i;
+	  continue;
 	}
+      else if ( static_cast<LinkedList*>(ptr[i])->isSame(ll) )
+	{
+	  ret_val = i;
+	  break;
+	}
+
       --i;
     }
 
@@ -326,7 +332,7 @@ void* LinkedList::remove(int index)
 
   for ( int i = 0; i < reserve_size - index; ++i )
     {
-    new_ptr[i + index] = ptr[i + index + 1];
+      new_ptr[i + index] = ptr[i + index + 1];
     }
 
   free(ptr);
@@ -352,6 +358,7 @@ bool LinkedList::remove(char ch)
 	  ret_val = true;
 	  break;
 	}
+
       ++index;
     }
 
@@ -386,39 +393,41 @@ bool LinkedList::remove(LinkedList* ll)
 {
   int index = 0;
 
-  bool ret_val = false;
-
   while ( index < reserve_size )
     {
       int addr = reinterpret_cast<int>(ptr[index]);
 
-      if ( addr > ADDRESS )
+      if ( addr < ADDRESS )
 	{
-	  if ( static_cast<LinkedList*>(ptr[index])->isSame(ll) )
-	    {
-	      void** new_ptr =
-		static_cast<void**>(calloc(reserve_size - 1, sizeof(LinkedList*)));
+	  ++index;
+	  continue;
+	} 
+      else if ( !static_cast<LinkedList*>(ptr[index])->isSame(ll) )
+	{
+	  ++index;
+	  continue;
+	} 
 
-	      for ( int i = 0; i < index; ++i )
-		{
-		  new_ptr[i] = ptr[i];
-		}
+      void** new_ptr =
+	static_cast<void**>(calloc(reserve_size - 1, sizeof(LinkedList*)));
 
-	      for ( int i = 0; i < reserve_size - index; ++i )
-		{
-		  new_ptr[i + index] = ptr[i + index + 1];
-		}
-
-	      free(ptr);
-
-	      ptr = new_ptr;
-
-	      --reserve_size;
-     
-	      return true;
-	    }
+      for ( int i = 0; i < index; ++i )
+	{
+	  new_ptr[i] = ptr[i];
 	}
-      ++index;
+
+      for ( int i = 0; i < reserve_size - index; ++i )
+	{
+	  new_ptr[i + index] = ptr[i + index + 1];
+	}
+
+      free(ptr);
+
+      ptr = new_ptr;
+
+      --reserve_size;
+     
+      return true;
     }
 
   return false;
@@ -429,7 +438,7 @@ void* LinkedList::removeFirst()
 {
   void** new_ptr = static_cast<void**>(calloc(reserve_size - 1, PTR_SIZE));
 
-  void* ret_val = this->getFirst();
+  void* ret_val = getFirst();
 
   for ( int i = 0; i < reserve_size - 1; ++i )
     {
@@ -450,7 +459,7 @@ void* LinkedList::removeLast()
 {
   void** new_ptr = static_cast<void**>(calloc(reserve_size - 1, PTR_SIZE));
 
-  void* ret_val = this->getLast();
+  void* ret_val = getLast();
 
   for ( int i = 0; i < reserve_size - 1; ++i )
     {
@@ -511,46 +520,44 @@ bool LinkedList::isSame(LinkedList* ll)
     {
       return true;
     }
-  else
-    {
-      while ( i < reserve_size )
-	{
-	  int addr_0 = reinterpret_cast<int>(ptr[i]);
-	  int addr_1 = reinterpret_cast<int>(ll->ptr[i]);
 
-	  if ( (addr_0 > ADDRESS && addr_1 < ADDRESS) ||
-	       (addr_0 < ADDRESS && addr_1 > ADDRESS) )
+  while ( i < reserve_size )
+    {
+      int addr_0 = reinterpret_cast<int>(ptr[i]);
+      int addr_1 = reinterpret_cast<int>(ll->ptr[i]);
+
+      if ( (addr_0 > ADDRESS && addr_1 < ADDRESS) ||
+	   (addr_0 < ADDRESS && addr_1 > ADDRESS) )
+	{
+	  return false;
+	}
+      else if ( addr_0 < ADDRESS && addr_1 < ADDRESS )
+	{
+	  if ( *static_cast<char*>(ptr[i]) != *reinterpret_cast<char*>(ll->ptr[i]) )
 	    {
 	      return false;
 	    }
-	  else if ( addr_0 < ADDRESS && addr_1 < ADDRESS )
-	    {
-	      if ( *static_cast<char*>(ptr[i]) != *reinterpret_cast<char*>(ll->ptr[i]) )
-		{
-		  return false;
-		}
-	    }
-	  else if ( addr_0 > ADDRESS && addr_1 > ADDRESS )
-	    {
-	      LinkedList* ll_inner = static_cast<LinkedList*>(ptr[i]);
-	      LinkedList* ll_inner_arg = static_cast<LinkedList*>(ll->ptr[i]);
 
-	      if ( ll_inner->reserve_size != ll_inner_arg->reserve_size )
-		{
-		  return false;
-		}
-	      else
-		{
-		  if ( !ll_inner->isSame(ll_inner_arg) )
-		    {
-		      return false;
-		    }
-		}
-	    }
 	  ++i;
+	  continue;
 	}
-      return true;
-    }
+
+      LinkedList* ll_inner = static_cast<LinkedList*>(ptr[i]);
+      LinkedList* ll_inner_arg = static_cast<LinkedList*>(ll->ptr[i]);
+
+      if ( ll_inner->reserve_size != ll_inner_arg->reserve_size )
+	{
+	  return false;
+	}
+      else if ( !ll_inner->isSame(ll_inner_arg) )
+	{
+	  return false;
+	}
+
+      ++i;
+    }	
+     
+  return true;
 }
   
 
@@ -633,6 +640,8 @@ int main()
   //   * 各ノードの値を出力
   //   */
   //  func(ll_root);
+
+
 
 }
 
