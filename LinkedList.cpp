@@ -533,7 +533,7 @@ bool LinkedList::isSame(LinkedList* ll)
 	}
       else if ( addr_0 < ADDRESS && addr_1 < ADDRESS )
 	{
-	  if ( *static_cast<char*>(ptr[i]) != *reinterpret_cast<char*>(ll->ptr[i]) )
+	  if ( *static_cast<char*>(ptr[i]) != *static_cast<char*>(ll->ptr[i]) )
 	    {
 	      return false;
 	    }
@@ -580,66 +580,66 @@ int main()
   // /***
   //  * まずはリストを用意する
   //  */
-  // // 深さ0(ルート)
-  // LinkedList* ll_root = new LinkedList();
+  // 深さ0(ルート)
+  LinkedList* ll_root = new LinkedList();
 
 
-  // // 深さ1
-  // LinkedList* ll_l_dep1 = new LinkedList();
-  // LinkedList* ll_r_dep1 = new LinkedList();
+  // 深さ1
+  LinkedList* ll_l_dep1 = new LinkedList();
+  LinkedList* ll_r_dep1 = new LinkedList();
 
 
-  // // 深さ2
-  //  LinkedList* ll_ll_dep2 = new LinkedList();
-  //  LinkedList* ll_lr_dep2 = new LinkedList();
+  // 深さ2
+   LinkedList* ll_ll_dep2 = new LinkedList();
+   LinkedList* ll_lr_dep2 = new LinkedList();
   
-  //  LinkedList* ll_rl_dep2 = new LinkedList();
-  //  LinkedList* ll_rr_dep2 = new LinkedList();
+   LinkedList* ll_rl_dep2 = new LinkedList();
+   LinkedList* ll_rr_dep2 = new LinkedList();
 
   
  
 
-  //  /***
-  //    * 深いところにあるリストから値を詰め込んでいく
-  //    */
+   /***
+     * 深いところにあるリストから値を詰め込んでいく
+     */
 
-  //  //   深さ2
-  //  char tmp_ll = '1';
-  //  ll_ll_dep2->add(&tmp_ll);
+   //   深さ2
+   char tmp_ll = '1';
+   ll_ll_dep2->add(&tmp_ll);
   
-  //  char tmp_lr = '3';
-  //  ll_lr_dep2->add(&tmp_lr);
+   char tmp_lr = '3';
+   ll_lr_dep2->add(&tmp_lr);
   
-  //  char tmp_rl = '3';
-  //  ll_rl_dep2->add(&tmp_rl);
+   char tmp_rl = '3';
+   ll_rl_dep2->add(&tmp_rl);
   
-  //  char tmp_rr = '5';
-  //  ll_rr_dep2->add(&tmp_rr);
+   char tmp_rr = '5';
+   ll_rr_dep2->add(&tmp_rr);
 
 
-  //  //   深さ1
-  //  char tmp_l = '2';
-  //  ll_l_dep1->add(&tmp_l);
-  //  ll_l_dep1->add(ll_ll_dep2);
-  //  ll_l_dep1->add(ll_lr_dep2);
+   //   深さ1
+   char tmp_l = '2';
+   ll_l_dep1->add(&tmp_l);
+   ll_l_dep1->add(ll_ll_dep2);
+   ll_l_dep1->add(ll_lr_dep2);
 
-  //  char tmp_r = '4';
-  //  ll_r_dep1->add(&tmp_r);
-  //  ll_r_dep1->add(ll_rl_dep2);
-  //  ll_r_dep1->add(ll_rr_dep2);
+   char tmp_r = '4';
+   ll_r_dep1->add(&tmp_r);
+   ll_r_dep1->add(ll_rl_dep2);
+   ll_r_dep1->add(ll_rr_dep2);
 
 
-  //  //   深さ0
-  //  char tmp_root = '3';
-  //  ll_root->add(&tmp_root);
-  //  ll_root->add(ll_l_dep1);
-  //  ll_root->add(ll_r_dep1);
+   //   深さ0
+   char tmp_root = '3';
+   ll_root->add(&tmp_root);
+   ll_root->add(ll_l_dep1);
+   ll_root->add(ll_r_dep1);
 
   
-  //  /***
-  //   * 各ノードの値を出力
-  //   */
-  //  func(ll_root);
+   /***
+    * 各ノードの値を出力
+    */
+   func(ll_root);
 
 
 
